@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
-@section('title','Edit Admin')
-@section('content_header_title','Edit Admin')
+@section('title','Create Admin')
+@section('content_header_title','Create Admin')
 
 @section('main-content')
     <div class="box box-primary">
@@ -11,7 +11,7 @@
                 test
             </div>
         </div>
-        <div class="box-body no-padding table-responsive">
+        <div class="box-body">
             <form action="" id="form" method="POST">
                 @csrf
             </form>

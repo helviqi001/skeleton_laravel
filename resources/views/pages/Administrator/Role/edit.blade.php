@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
-@section('title','Edit Admin')
-@section('content_header_title','Edit Admin')
+@section('title','Roles')
+@section('content_header_title','Roles')
 
 @section('main-content')
     <div class="box box-primary">

@@ -41,6 +41,6 @@ Route::group([
         Route::post('/create', 'UserController@store');
         Route::get('/{id}', 'UserController@edit');
         Route::post('/{id}', 'UserController@update');
-        Route::delete('/{id}', 'UserController@destroy');
+        Route::get('delete/{id}', 'UserController@delete');
     });
 });

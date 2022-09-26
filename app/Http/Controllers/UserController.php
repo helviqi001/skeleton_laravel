@@ -4,15 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Services\Gateway;
 use Illuminate\Http\Request;
-use DataTables;
 use Illuminate\Support\Facades\Session;
+use \Yajra\DataTables\DataTables;
 
 class UserController extends Controller
 {
-    private $role = [
-        'email' => 'required|email|string',
-        'password' => 'required|string|min:4',
-    ];
+    private $gateway;
+
     public function __construct()
     {
         $this->gateway = new Gateway();
@@ -23,39 +21,9 @@ class UserController extends Controller
         return view('pages.Administrator.User.index');
     }
 
-    public function fnGetData(Request $request)
-    {
-        $this->gateway->setHeaders([
-            'Authorization' => 'Bearer '.Session::get('auth')->token
-        ]);
-        $data = $this->gateway->get(env('GATEWAY_URL').'manage/user', [
-            'page' => $request->input('draw'),
-            'perPage' => $request->input('length'),
-            'limit' => $request->input('length'),
-            'keyword' => $request->input('search')['value'],
-            'sortBy' => $request->input('columns')[$request->input('order')[0]['column']]['name'],
-            'sort' => $request->input('order')[0]['dir']
-        ])->getData()->data;
-
-        if(!empty($data->items)){
-            return DataTables::of($data->items)
-                ->skipPaging()
-                ->setTotalRecords($data->total)
-                ->setFilteredRecords($data->total)
-                ->addColumn('action', function ($q){
-                    $btn = '<button class="btn btn-default btn-xs btnEdit" style="padding: 5px 6px;">Edit</button>';
-                    $btn .= ' <button class="btn btn-danger btn-xs btnDelete" style="padding: 5px 6px;">Delete</button>';
-                    return $btn;
-                })
-                ->rawColumns(['action'])
-                ->make(true);
-        }
-        return false;
-    }
-
     public function create()
     {
-
+        return view('pages.Administrator.User.create');
     }
 
     public function store()
@@ -63,65 +31,47 @@ class UserController extends Controller
 
     }
 
-    public function edit()
+    public function edit($id)
+    {
+        return view('pages.Administrator.User.edit');
+    }
+
+    public function update(Request $request, $id)
     {
 
     }
 
-    public function update()
+    public function delete($id)
     {
-
+        return redirect('/admin');
     }
 
-    public function delete()
+    public function fnGetData(Request $request)
     {
+        $this->gateway->setHeaders([
+            'Authorization' => 'Bearer ' . Session::get('auth')->token
+        ]);
+        $page = $request->input('start') / $request->input('length') + 1;
+        $data = $this->gateway->get('/api/cms/manage/user', [
+            'page' => $page,
+            'perPage' => $request->input('length'),
+            'limit' => $request->input('length'),
+            'keyword' => $request->input('search')['value'],
+            'sortBy' => $request->input('columns')[$request->input('order')[0]['column']]['name'],
+            'sort' => $request->input('order')[0]['dir']
+        ])->getData()->data;
 
-    }
-
-    public function authenticate(Request $request)
-    {
-
-        $gateway = new Gateway();
-
-        if (!\Cache::has('token-app')) {
-            $token = $gateway->post('/api/token', [
-                'clientKey' => 'clientKeyBackOffice',
-                'secretKey' => 'secret'
-            ]);
-
-            \Cache::add('token-app', $token->getData()->data->token, 2592000);;
-        }
-
-        $this->validate($request, $this->role);
-        $response = $gateway->post('/api/cms/login', $request->all())->getData();
-        if (!$response->success) {
-            $error = array('email' => $request['message']);
-            $username = $this->username();
-
-            return view('auth.login', compact('error', 'username'));
-        }
-        Session::put('auth', $response->data);
-
-        $gateway = new Gateway();
-        $responsePrivileges = $gateway->get('/api/cms/auth/my-privileges')->getData();
-        Session::put('privileges', $responsePrivileges->data);
-
-        return redirect('dashboard');
-    }
-
-    public function register(Request $request)
-    {
-        $gateway = new Gateway();
-        $response = $gateway->Post('register', $request->only('name', 'email', 'password'));
-
-        return response()->json($response, $response['code']);
-    }
-
-    public function logout(Request $request)
-    {
-        $request->session()->invalidate();
-
-        return redirect('/login');
+        return DataTables::of($data->items)
+            ->skipPaging()
+            ->setTotalRecords($data->total)
+            ->setFilteredRecords($data->total)
+            ->addColumn('action', function ($q) {
+                $btn = '<a class="btn btn-default" href="admin/' . $q->userId . '">Edit</a>';
+                $btn .= ' <button class="btn btn-danger btn-xs btnDelete" style="padding: 5px 6px;" onclick="fnDelete(this,' . $q->userId . ')">Delete</button>';
+                return $btn;
+            })
+            ->rawColumns(['action'])
+            ->make(true);
     }
 }
 

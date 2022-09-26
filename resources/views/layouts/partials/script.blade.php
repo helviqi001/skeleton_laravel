@@ -1,6 +1,4 @@
 <script src="{{ asset('/js/app.js') }}"></script>
-<script src="{{ asset('/plugins/datatables/datatables.min.js') }}"></script>
-<script src="{{ asset('/plugins/datatables/extensions/responsive.min.js') }}"></script>
-<script src="{{ asset('/plugins/datatables/extensions/select.min.js') }}"></script>
-<script src="{{ asset('/plugins/datatables/extensions/buttons.min.js') }}"></script>
+<script src="{{ asset('/plugins/datatables.net/js/jquery.dataTables.min.js') }}"></script>
+<script src="{{ asset('/plugins/datatables.net-bs/js/dataTables.bootstrap.min.js') }}"></script>
 @yield('script')
