@@ -36,6 +36,7 @@ Route::group([
         'prefix' => 'admin'
     ], function () {
         Route::get('/', 'UserController@index');
+        Route::get('/fn_get_data', 'UserController@fnGetData');
         Route::get('/create', 'UserController@create');
         Route::post('/create', 'UserController@store');
         Route::get('/{id}', 'UserController@edit');
