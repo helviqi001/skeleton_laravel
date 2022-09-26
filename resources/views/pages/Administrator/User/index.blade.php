@@ -15,7 +15,7 @@
             <table class="table table-striped admin-list">
                 <thead>
                 <tr>
-                    <th>Photo</th>
+                    <th>Avatar</th>
                     <th>Name</th>
                     <th>Username</th>
                     <th>Email</th>
@@ -61,7 +61,7 @@
                 url: window.location.href + "/fn_get_data",
             },
             columns: [
-                {data: 'avatar', name: 'avatar', width: '10%'},
+                {data: 'avatar', name: 'avatar', width: '10%', searchable: false, orderable: false},
                 {data: 'name', name: 'name'},
                 {data: 'username', name: 'username'},
                 {data: 'email', name: 'email'},

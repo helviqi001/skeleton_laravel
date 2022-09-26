@@ -43,4 +43,16 @@ Route::group([
         Route::post('/{id}', 'UserController@update');
         Route::get('delete/{id}', 'UserController@delete');
     });
+
+    Route::group([
+        'prefix' => 'role'
+    ], function () {
+        Route::get('/', 'RoleController@index');
+        Route::get('/fn_get_data', 'RoleController@fnGetData');
+        Route::get('/create', 'RoleController@create');
+        Route::post('/create', 'RoleController@store');
+        Route::get('/{id}', 'RoleController@edit');
+        Route::post('/{id}', 'RoleController@update');
+        Route::get('delete/{id}', 'RoleController@delete');
+    });
 });

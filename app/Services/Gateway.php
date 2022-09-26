@@ -22,6 +22,5 @@ class Gateway
         } else {
             $this->setHeaders(['Authorization' => 'Bearer '. \Cache::get('token-app')]);
         }
-
     }
 }
