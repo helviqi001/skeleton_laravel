@@ -1,12 +1,15 @@
+@php
+$auth = Session::get('user_data');
+@endphp
 <aside class="main-sidebar">
     <section class="sidebar">
         <div class="user-panel">
             <div class="pull-left image">
-                <img src="{{ $auth->userAuth->avatar }}" class="img-circle" alt="User Image"/>
+                <img src="{{ $auth['avatar'] }}" class="img-circle" alt="User Image"/>
             </div>
             <div class="pull-left info">
                 {{--                <p style="overflow: hidden;text-overflow: ellipsis;max-width: 160px;" data-toggle="tooltip" title="{{ $auth->userAuth->name }}">{{ $auth->userAuth->name }}</p>--}}
-                <p style="overflow: hidden;text-overflow: ellipsis;max-width: 160px;" data-toggle="tooltip" title="{{ $auth->userAuth->name }}">{{ $auth->userAuth->name }}</p>
+                <p style="overflow: hidden;text-overflow: ellipsis;max-width: 160px;" data-toggle="tooltip" title="{{ $auth['name'] }}">{{ $auth['name'] }}</p>
                 <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
                 {{--                <small>{{ $auth->userAuth->name }}</small>--}}
             </div>
@@ -30,20 +33,22 @@
             <li class="{{ isActiveUrl('/dashboard') }}">
                 <a href="{{route('dashboard')}}"><i class="fa fa-tachometer-alt"></i><span>Dashboard</span></a>
             </li>
+            @if (!empty(Session::get('privileges')))
             @foreach(Session::get('privileges') as $privilege)
-                <li class="treeview {{ areActiveUrl(collect($privilege->menus)->map(function ($data) {return $data->url;})) }}">
+                <li class="treeview">
                     <a href="#">
-                        <i class="{{ $privilege->icon }}"></i>
-                        <span>{{ $privilege->name }}</span><span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
+                        <i class="{{ $privilege['icon'] }}"></i>
+                        <span>{{ $privilege['name'] }}</span><span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
                     </a>
                     <ul class="treeview-menu">
-                        @foreach($privilege->menus as $menu)
-                            <li class="{{ isActiveUrl($menu->url) }}"><a href="{{ $menu->url }}"><i class="fa fa-circle-o"></i> {{ $menu->name }}</a></li>
+                        @foreach($privilege['menus'] as $menu)
+                        
+                            <li class="{{ isActiveUrl($menu['url']) }}"><a href="{{ $menu['url'] }}"><i class="fa fa-circle-o"></i> {{ $menu['name'] }}</a></li>
                         @endforeach
                     </ul>
                 </li>
             @endforeach
-
+            @endif
         </ul>
     </section>
 </aside>

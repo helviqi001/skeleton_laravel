@@ -17,7 +17,7 @@
         @if (count($errors) > 0)
             <div class="alert alert-danger">
                 <strong>Whoops!</strong><br>
-                @foreach ($errors->all() as $error)
+                @foreach ($errors as $error)
                     {{ $error }}<br>
                 @endforeach
             </div>
@@ -31,11 +31,11 @@
             <p class="login-box-msg"> {{ trans('message.siginsession') }} </p>
             <form method="POST" action="{{ route('authenticate') }}">
                 {{ csrf_field() }}
-                <div class="form-group has-feedback {{ $errors->has($username) ? ' has-error' : '' }}">
-                    <input id="username" type="text" class="form-control" name="{{$username}}" value="{{ old($username) }}" placeholder="{{ucfirst($username)}}" required autofocus>
+                <div class="form-group">
+                    <input id="email" type="text" class="form-control" name="email" value="{{ old('email') }}" placeholder="Username/Email" required autofocus>
                     <span class="glyphicon glyphicon-user form-control-feedback red"></span>
                 </div>
-                <div class="form-group has-feedback {{ $errors->has('password') ? ' has-error' : '' }}">
+                <div class="form-group">
                     <input id="password" type="password" class="form-control" name="password" placeholder="Password" required>
                     <span class="glyphicon glyphicon-lock form-control-feedback"></span>
                 </div>

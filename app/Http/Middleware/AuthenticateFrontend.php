@@ -11,7 +11,7 @@ use Illuminate\Http\Request;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 
-class Authenticate extends Middleware
+class AuthenticateFrontend extends Middleware
 {
     /**
      * The authentication factory instance.
@@ -43,16 +43,24 @@ class Authenticate extends Middleware
      */
     public function handle($request, Closure $next, ...$guards)
     {
-        $session = $request->session()->get('token');
+        $session = $request->header('Authorization');
+        
         if (!empty($session)) {
             $decode = JWT::decode($session, new Key(env('JWT_SECRET'), 'HS256'));
-
             if (Carbon::now()->format("Y-m-d H:i:s") <= Carbon::createFromTimestamp($decode->exp)->format('Y-m-d H:i:s')) {
                 $request->user = $decode->data;
                 return $next($request);
+            } else {
+                $data['success'] = false;
+                $data['message'] = 'Token expired';
+                $data['data'] = (object) array();
+                return response()->json($data, 400);
             }
         }
-        $this->unauthenticated($request, $guards);
+        $data['success'] = false;
+        $data['message'] = 'Token not provided';
+        $data['data'] = (object) array();
+        return response()->json($data, 400);
     }
 
     /**

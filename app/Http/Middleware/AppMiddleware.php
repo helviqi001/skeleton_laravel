@@ -8,10 +8,12 @@ use Illuminate\Auth\Middleware\Authenticate as Middleware;
 use Illuminate\Contracts\Auth\Factory as Auth;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
+use App\Models\Credential;
 
-class Authenticate extends Middleware
+class AppMiddleware extends Middleware
 {
     /**
      * The authentication factory instance.
@@ -43,16 +45,17 @@ class Authenticate extends Middleware
      */
     public function handle($request, Closure $next, ...$guards)
     {
-        $session = $request->session()->get('token');
-        if (!empty($session)) {
-            $decode = JWT::decode($session, new Key(env('JWT_SECRET'), 'HS256'));
-
-            if (Carbon::now()->format("Y-m-d H:i:s") <= Carbon::createFromTimestamp($decode->exp)->format('Y-m-d H:i:s')) {
-                $request->user = $decode->data;
+        $check = Credential::where('client_key', $request->header('clientKey'))->first();
+     
+        if ($check) {
+            if (Hash::check($request->header('secretKey'), $check->secret_key)) {
                 return $next($request);
             }
         }
-        $this->unauthenticated($request, $guards);
+        $data['success'] = false;
+        $data['message'] = 'Forbidden, You do not have permission!';
+        $data['data'] = (object) array();
+        return response()->json($data, 403);
     }
 
     /**

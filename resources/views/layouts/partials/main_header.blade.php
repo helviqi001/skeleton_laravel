@@ -1,3 +1,6 @@
+@php
+$auth = Session::get('user_data');
+@endphp
 <header class="main-header">
     <a href="{{ route('dashboard') }}" class="logo">
         {{--<span class="logo-mini"><img src="{{asset('/img/logo.png')}}" class="img-responsive" style="padding: 5px;"></span>--}}
@@ -31,12 +34,12 @@
             <ul class="nav navbar-nav">
                 <li class="dropdown user user-menu" id="user_menu" style="max-width: 280px;white-space: nowrap;">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" style="max-height: 50px;max-width: 280px;white-space: nowrap;overflow: hidden;overflow-text: ellipsis">
-                        <img src="{{ $auth->userAuth->avatar }}" class="user-image" alt="User Image"/>
-                        <span style="overflow: hidden;text-overflow: ellipsis;max-width: 160px;" data-toggle="tooltip" title="{{ $auth->userAuth->name }}">{{ $auth->userAuth->name }}</span>
+                        <img src="{{ $auth['avatar'] }}" class="user-image" alt="User Image"/>
+                        <span style="overflow: hidden;text-overflow: ellipsis;max-width: 160px;" data-toggle="tooltip" title="{{ $auth['name'] }}">{{ $auth['name'] }}</span>
                     </a>
                     <ul class="dropdown-menu">
 
-                        <li class="disabled"><a href="#">Option</a></li>
+                        <li class="disabled"><a href="#">Profile</a></li>
                         <li class="divider"></li>
                         <li>
                             <a href="{{ url('/logout') }}" id="logout" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Sign out</a>

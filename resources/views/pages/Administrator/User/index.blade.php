@@ -8,10 +8,10 @@
         <div class="box-header with-border">
             <h3 class="box-title">Admin</h3>
             <div class="box-tools">
-                test
+                
             </div>
         </div>
-        <div class="box-body table-responsive">
+        <div class="box-body">
             <table class="table table-striped admin-list">
                 <thead>
                 <tr>

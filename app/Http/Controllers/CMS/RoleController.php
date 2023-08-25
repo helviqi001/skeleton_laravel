@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Services\Gateway;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Session;
 use \Yajra\DataTables\DataTables;
 

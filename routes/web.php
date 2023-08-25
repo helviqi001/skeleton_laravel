@@ -18,19 +18,18 @@ Route::get('/', function () {
 })->name('landing');
 
 Route::group([
-    'middleware' => 'guest',
     'namespace' => 'App\Http\Controllers\Auth'
 ], function () {
     Route::get('/login', 'LoginController@showLoginForm')->name('login');
     Route::post('/login', 'LoginController@authenticate')->name('authenticate');
+    Route::post('logout', 'LoginController@logout')->name('logout');
 });
 
 Route::group([
     'middleware' => 'auth',
-    'namespace' => 'App\Http\Controllers'
+    'namespace' => 'App\Http\Controllers\CMS'
 ], function () {
     Route::get('/dashboard', 'DashboardController@index')->name('dashboard');
-    Route::post('logout', 'Auth\LoginController@logout')->name('logout');
 
     Route::group([
         'prefix' => 'admin'
