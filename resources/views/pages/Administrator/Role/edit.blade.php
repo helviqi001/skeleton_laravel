@@ -8,7 +8,7 @@
         <div class="box-header with-border">
             <h3 class="box-title">Admin</h3>
             <div class="box-tools">
-                test
+
             </div>
         </div>
         <div class="box-body table-responsive">
@@ -16,11 +16,11 @@
                 @csrf
                 <div class="form-group">
                     <label for="employeeFirstName">Name<span class="text-red">*</span></label>
-                    <input type="text" class="form-control" name="name">
+                    <input type="text" class="form-control" name="name" value="{{ $data->name }}">
                 </div>
                 <div class="form-group">
                     <label for="employeeFirstName">Description</label>
-                    <input type="text" class="form-control" name="description">
+                    <input type="text" class="form-control" name="description" value="{{ $data->description }}">
                 </div>
                 <table class="table table-striped">
                     <thead>
@@ -35,46 +35,59 @@
                     </thead>
                     <tbody>
                     @foreach($menuItems as $menuItem)
+                        @php
+                            $view = $add = $edit = $delete = $other = 0;
+                        @endphp
+                        @foreach ($data->privileges as $item)
+                            @if ($menuItem['menu_item_id'] == $item->menu_item_id)
+                                @php
+                                    $view = $item->view;
+                                    $add = $item->add;
+                                    $edit = $item->edit;
+                                    $delete = $item->delete;
+                                    $other = $item->other;
+                                @endphp
+                            @endif
+                        @endforeach
                         <tr>
-                            <td>{{ $menuItem->name }}</td>
+                            <td>{{ $menuItem['menu_group']['name'] }}/{{ $menuItem['name'] }}</td>
                             <td>
                                 <div class="checkbox">
                                     <label>
-                                        <input type="checkbox"
-                                               class=""
-                                               name="menu[{{ $menuItem->menuItemId }}][menuView]"
-                                               value="1">
+                                        <input type="checkbox" class="" name="menu[{{ $menuItem['menu_item_id'] }}][view]" value="1"
+                                        {{ $view == 1?'checked':'' }}>
                                     </label>
                                 </div>
                             </td>
                             <td>
                                 <div class="checkbox">
                                     <label>
-                                        <input type="checkbox"
-                                               class=""
-                                               name="menu[{{ $menuItem->menuItemId }}][menuAdd]"
-                                               value="1">
+                                        <input type="checkbox" class="" name="menu[{{ $menuItem['menu_item_id'] }}][add]" value="1"
+                                        {{ $add == 1?'checked':'' }}>
                                     </label>
                                 </div>
                             </td>
                             <td>
                                 <div class="checkbox">
                                     <label>
-                                        <input type="checkbox" class="" name="menu[{{ $menuItem->menuItemId }}][menuEdit]" value="1">
+                                        <input type="checkbox" class="" name="menu[{{ $menuItem['menu_item_id'] }}][edit]" value="1"
+                                        {{ $edit == 1?'checked':'' }}>
                                     </label>
                                 </div>
                             </td>
                             <td>
                                 <div class="checkbox">
                                     <label>
-                                        <input type="checkbox" class="" name="menu[{{ $menuItem->menuItemId }}][menuDelete]" value="1">
+                                        <input type="checkbox" class="" name="menu[{{ $menuItem['menu_item_id'] }}][delete]" value="1"
+                                        {{ $delete == 1?'checked':'' }}>
                                     </label>
                                 </div>
                             </td>
                             <td>
                                 <div class="checkbox">
                                     <label>
-                                        <input type="checkbox" class="" name="menu[{{ $menuItem->menuItemId }}][menuOther]" value="1">
+                                        <input type="checkbox" class="" name="menu[{{ $menuItem['menu_item_id'] }}][other]" value="1"
+                                        {{ $other == 1?'checked':'' }}>
                                     </label>
                                 </div>
                             </td>

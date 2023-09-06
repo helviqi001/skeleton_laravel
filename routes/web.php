@@ -54,4 +54,29 @@ Route::group([
         Route::post('/{id}', 'RoleController@update');
         Route::get('delete/{id}', 'RoleController@delete');
     });
+
+    Route::group([
+        'prefix' => 'menu-group'
+    ], function () {
+        Route::get('/', 'MenuGroupController@index');
+        Route::get('/fn_get_data', 'MenuGroupController@fnGetData');
+        Route::get('/create', 'MenuGroupController@create');
+        Route::post('/create', 'MenuGroupController@store');
+        Route::get('/{id}', 'MenuGroupController@edit');
+        Route::post('/{id}', 'MenuGroupController@update');
+        Route::post('update-status/{id}', 'MenuGroupController@updateStatus');
+        Route::get('delete/{id}', 'MenuGroupController@delete');
+    });
+
+    Route::group([
+        'prefix' => 'menu-item'
+    ], function () {
+        Route::get('/', 'MenuItemController@index');
+        Route::get('/fn_get_data', 'MenuItemController@fnGetData');
+        Route::get('/create', 'MenuItemController@create');
+        Route::post('/create', 'MenuItemController@store');
+        Route::get('/{id}', 'MenuItemController@edit');
+        Route::post('/{id}', 'MenuItemController@update');
+        Route::get('delete/{id}', 'MenuItemController@delete');
+    });
 });

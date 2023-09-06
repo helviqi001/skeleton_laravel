@@ -1,12 +1,16 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\CMS;
 
 use App\Services\Gateway;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Session;
 use \Yajra\DataTables\DataTables;
+use App\Models\Role;
+use App\Models\Privilege;
+use App\Models\MenuGroup;
+use App\Models\MenuItem;
 
 class RoleController extends Controller
 {
@@ -17,68 +21,152 @@ class RoleController extends Controller
 
     public function create()
     {
-        $gateway = new Gateway();
-
-        $menuItems = $gateway->get('/api/cms/manage/menu-item', [
-            'limit' => 999
-        ])->getData()->data->items;
+        $menuItems = MenuItem::with('menu_group')->get()->toArray();
 
         return view('pages.Administrator.Role.create', compact('menuItems'));
     }
 
-    public function store()
+    public function store(Request $request)
     {
+        $data = $request->all();
 
+        // insert new role
+        $createRole = Role::create($data);
+        if ($createRole) {
+            // get all menu for insert privilege later
+            $menuItems = MenuItem::get()->toArray();
+            foreach ($menuItems as $keyX => $menuItem) {
+                // set param and default value to insert privilege
+                $privilege['role_id'] = $createRole->role_id;
+                $privilege['menu_item_id'] = $menuItem['menu_item_id'];
+                $privilege['view'] = 0;
+                $privilege['add'] = 0;
+                $privilege['edit'] = 0;
+                $privilege['delete'] = 0;
+                $privilege['other'] = 0;
+                if (array_key_exists('menu', $data)) {
+                    foreach ($data['menu'] as $keyY => $menu) {
+                        if ($menuItem['menu_item_id'] == $keyY) {
+                            if (array_key_exists('view', $menu)) {
+                                $privilege['view'] = 1;
+                            }
+                            if (array_key_exists('add', $menu)) {
+                                $privilege['add'] = 1;
+                            }
+                            if (array_key_exists('edit', $menu)) {
+                                $privilege['edit'] = 1;
+                            }
+                            if (array_key_exists('delete', $menu)) {
+                                $privilege['delete'] = 1;
+                            }
+                            if (array_key_exists('other', $menu)) {
+                                $privilege['other'] = 1;
+                            }
+                        }
+                    }
+                }
+                // create privilege for new role
+                Privilege::create($privilege);
+            }
+        } else {
+            return back()->with('error', 'Oops, something went wrong!');
+        }
+        return redirect('role')->with('success', 'Role Created');
     }
 
     public function edit($id)
     {
-        $gateway = new Gateway();
+        $data = Role::where('role_id', $id)->with('privileges')->first();
+        $menuItems = MenuItem::with('menu_group')->get()->toArray();
 
-        $menuItems = $gateway->get('/api/cms/manage/menu-item', [
-            'limit' => 999
-        ])->getData()->data->items;
-
-        return view('pages.Administrator.Role.edit', compact('menuItems'));
+        return view('pages.Administrator.Role.edit', compact('data', 'menuItems'));
     }
 
     public function update(Request $request, $id)
     {
+        $data = $request->all();
 
+        // get role
+        $role = Role::where('role_id', $id)->with('privileges')->first();
+        if ($role) {
+            foreach ($role->privileges as $keyX => $rolePrivilege) {
+                // set param and default value to update privilege
+                $privilege['view'] = 0;
+                $privilege['add'] = 0;
+                $privilege['edit'] = 0;
+                $privilege['delete'] = 0;
+                $privilege['other'] = 0;
+                if (array_key_exists('menu', $data)) {
+                    foreach ($data['menu'] as $keyY => $menu) {
+                        if ($rolePrivilege['menu_item_id'] == $keyY) {
+                            if (array_key_exists('view', $menu)) {
+                                $privilege['view'] = 1;
+                            }
+                            if (array_key_exists('add', $menu)) {
+                                $privilege['add'] = 1;
+                            }
+                            if (array_key_exists('edit', $menu)) {
+                                $privilege['edit'] = 1;
+                            }
+                            if (array_key_exists('delete', $menu)) {
+                                $privilege['delete'] = 1;
+                            }
+                            if (array_key_exists('other', $menu)) {
+                                $privilege['other'] = 1;
+                            }
+                        }
+                    }
+                }
+                // update privilege
+                Privilege::where('privilege_id', $rolePrivilege->privilege_id)->update($privilege);
+            }
+        } else {
+            return back()->with('error', 'Oops, something went wrong!');
+        }
+        return redirect('role')->with('success', 'Role Updated');
     }
 
     public function delete($id)
     {
-        $gateway = new Gateway();
-
-        $deleteRole = $gateway->delete('/api/cms/manage/role/' . $id);
-        if (!$deleteRole->getData()->success) {
-            return redirect('/role')->with('error', $deleteRole->getData()->message);
-        }
+        Privilege::where('role_id', $id)->delete();
+        Role::where('role_id', $id)->delete();
         return redirect('/role')->with('success', 'Role Deleted');
     }
 
     public function fnGetData(Request $request)
     {
-        $gateway = new Gateway();
+        // set page parameter for pagination
+        $page = ($request->start / $request->length) + 1;
+        $request->merge(['page' => $page]);
 
-        $page = $request->input('start') / $request->input('length') + 1;
-        $data = $gateway->get('/api/cms/manage/role', [
-            'page' => $page,
-            'perPage' => $request->input('length'),
-            'limit' => $request->input('length'),
-            'keyword' => $request->input('search')['value'],
-            'sortBy' => $request->input('columns')[$request->input('order')[0]['column']]['name'],
-            'sort' => $request->input('order')[0]['dir']
-        ])->getData()->data;
+        $data  = new Role();
+        if ($request->session()->get('user_data')['role_id'] != 1) {
+            $data = $data->where('role_id', '!=', 1);
+        }
 
-        return DataTables::of($data->items)
+        if ($request->input('search')['value'] != null && $request->input('search')['value'] != '') {
+            $data = $data->where('name', 'LIKE', '%'.$request->keyword.'%');
+        }
+
+        //Setting Limit
+        $limit = 10;
+        if (!empty($request->input('length'))) {
+            $limit = $request->input('length');
+        }
+
+        $data = $data->orderBy($request->columns[$request->order[0]['column']]['name'], $request->order[0]['dir'])->paginate($limit);
+
+
+        $data = json_encode($data);
+        $data = json_Decode($data);
+
+        return DataTables::of($data->data)
             ->skipPaging()
             ->setTotalRecords($data->total)
             ->setFilteredRecords($data->total)
             ->addColumn('action', function ($data) {
-                $btn = '<a class="btn btn-default" href="role/' . $data->roleId . '">Edit</a>';
-                $btn .= ' <button class="btn btn-danger btn-xs btnDelete" style="padding: 5px 6px;" onclick="fnDelete(this,' . $data->roleId . ')">Delete</button>';
+                $btn = '<a class="btn btn-default" href="role/' . $data->role_id . '">Edit</a>';
+                $btn .= ' <button class="btn btn-danger btn-xs btnDelete" style="padding: 5px 6px;" onclick="fnDelete(this,' . $data->role_id . ')">Delete</button>';
                 return $btn;
             })
             ->rawColumns(['action'])
