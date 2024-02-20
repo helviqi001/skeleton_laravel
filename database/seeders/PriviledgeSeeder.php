@@ -17,10 +17,10 @@ class PriviledgeSeeder extends Seeder
                 $rows = MenuItem::all();
                 $menus = [];
                 foreach ($rows as $menu) {
-                    if ($role->role_id == 1) {
+                    if ($role->id == 1) {
                         $menus[] = [
-                            'role_id' => $role->role_id,
-                            'menu_item_id' => $menu->menu_item_id,
+                            'role_id' => $role->id,
+                            'menu_item_id' => $menu->id,
                             'view' => 1,
                             'add' => 1,
                             'edit' => 1,
@@ -29,8 +29,8 @@ class PriviledgeSeeder extends Seeder
                         ];
                     } else {
                         $menus[] = [
-                            'role_id' => $role->role_id,
-                            'menu_item_id' => $menu->menu_item_id,
+                            'role_id' => $role->id,
+                            'menu_item_id' => $menu->id,
                             'view' => 0,
                             'add' => 0,
                             'edit' => 0,

@@ -36,7 +36,7 @@ class MenuGroupController extends Controller
 
     public function edit($id)
     {
-        $data = MenuGroup::where('menu_group_id', $id)->first();
+        $data = MenuGroup::where('id', $id)->first();
 
         return view('pages.Configuration.MenuGroup.edit', compact('data'));
     }
@@ -46,7 +46,7 @@ class MenuGroupController extends Controller
         $data = $request->except('_token');
 
         // insert new role
-        $update = MenuGroup::where('menu_group_id', $id)->update($data);
+        $update = MenuGroup::where('id', $id)->update($data);
         if ($update) {
             return redirect('menu-group')->with('success', 'Menu Group Updated');
         }
@@ -55,7 +55,7 @@ class MenuGroupController extends Controller
 
     public function updateStatus($id)
     {
-        $menuGroup = MenuGroup::where('menu_group_id', $id)->first();
+        $menuGroup = MenuGroup::where('id', $id)->first();
 
         if ($menuGroup) {
             if ($menuGroup->status == 0) {
@@ -80,7 +80,7 @@ class MenuGroupController extends Controller
     public function delete($id)
     {
         MenuItem::where('menu_group_id', $id)->delete();
-        MenuGroup::where('menu_group_id', $id)->delete();
+        MenuGroup::where('id', $id)->delete();
         return redirect('menu-group')->with('success', 'Menu Group Deleted');
     }
 
@@ -120,12 +120,12 @@ class MenuGroupController extends Controller
                     $option = '<option value="0">Inactive</option>
                     <option value="1" selected>Active</option>';
                 }
-                $element = '<select class="form-control" onchange="updateStatus('.$data->menu_group_id.')">'.$option.'</select>';
+                $element = '<select class="form-control" onchange="updateStatus('.$data->id.')">'.$option.'</select>';
                 return $element;
             })
             ->addColumn('action', function ($data) {
-                $btn = '<a class="btn btn-default" href="menu-group/' . $data->menu_group_id . '">Edit</a>';
-                $btn .= ' <button class="btn btn-danger btn-xs btnDelete" style="padding: 5px 6px;" onclick="fnDelete(this,' . $data->menu_group_id . ')">Delete</button>';
+                $btn = '<a class="btn btn-default" href="menu-group/' . $data->id . '">Edit</a>';
+                $btn .= ' <button class="btn btn-danger btn-xs btnDelete" style="padding: 5px 6px;" onclick="fnDelete(this,' . $data->id . ')">Delete</button>';
                 return $btn;
             })
             ->rawColumns(['status', 'action'])

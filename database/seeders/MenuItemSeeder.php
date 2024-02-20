@@ -14,7 +14,7 @@ class MenuItemSeeder extends Seeder
             [
                 'name' => 'Manage Admin',
                 'url' => '/admin',
-                'menu_group_id' => MenuGroup::where('name' , '=', 'Admin')->first()->menu_group_id,
+                'menu_group_id' => MenuGroup::where('name' , '=', 'Admin')->first()->id,
                 'sequence' => 1,
                 'created_at' => now(),
                 'updated_at' => now()
@@ -22,7 +22,7 @@ class MenuItemSeeder extends Seeder
             [
                 'name' => 'Manage Role',
                 'url' => '/role',
-                'menu_group_id' => MenuGroup::where('name' , '=', 'Admin')->first()->menu_group_id,
+                'menu_group_id' => MenuGroup::where('name' , '=', 'Admin')->first()->id,
                 'sequence' => 2,
                 'created_at' => now(),
                 'updated_at' => now()
@@ -30,7 +30,7 @@ class MenuItemSeeder extends Seeder
             [
                 'name' => 'Manage Menu Group',
                 'url' => '/menu-group',
-                'menu_group_id' => MenuGroup::where('name' , '=', 'Configuration')->first()->menu_group_id,
+                'menu_group_id' => MenuGroup::where('name' , '=', 'Configuration')->first()->id,
                 'sequence' => 1,
                 'created_at' => now(),
                 'updated_at' => now()
@@ -38,7 +38,7 @@ class MenuItemSeeder extends Seeder
             [
                 'name' => 'Manage Menu Item',
                 'url' => '/menu-item',
-                'menu_group_id' => MenuGroup::where('name' , '=', 'Configuration')->first()->menu_group_id,
+                'menu_group_id' => MenuGroup::where('name' , '=', 'Configuration')->first()->id,
                 'sequence' => 2,
                 'created_at' => now(),
                 'updated_at' => now()

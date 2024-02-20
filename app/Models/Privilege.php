@@ -19,15 +19,13 @@ class Privilege extends Model
         'other'
     ];
 
-    protected $primaryKey = 'privilege_id';
-
     public function menus()
     {
-        return $this->belongsTo(MenuItem::class, 'menu_item_id', 'menu_item_id');
+        return $this->belongsTo(MenuItem::class, 'menu_item_id', 'id');
     }
 
     public function roles()
     {
-        return $this->belongsTo(Role::class, 'role_id', 'role_id');
+        return $this->belongsTo(Role::class, 'role_id', 'id');
     }
 }

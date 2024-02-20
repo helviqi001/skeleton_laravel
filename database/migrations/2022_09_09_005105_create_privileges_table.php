@@ -8,7 +8,7 @@ return new class extends Migration {
     public function up()
     {
         Schema::create('privileges', function (Blueprint $table) {
-            $table->id('privilege_id');
+            $table->id();
             $table->unsignedBigInteger('role_id')->index();
             $table->unsignedBigInteger('menu_item_id')->index();
             $table->tinyInteger('view');

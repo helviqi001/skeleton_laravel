@@ -16,10 +16,8 @@ class MenuItem extends Model
         'menu_group_id'
     ];
 
-    protected $primaryKey = 'menu_item_id';
-
     public function menu_group()
     {
-        return $this->hasOne(MenuGroup::class, 'menu_group_id', 'menu_group_id');
+        return $this->belongsTo(MenuGroup::class, 'menu_group_id', 'id');
     }
 }

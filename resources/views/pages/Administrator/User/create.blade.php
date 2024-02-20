@@ -22,7 +22,7 @@
                                 <option selected disabled>Please create role first</option>
                             @else
                                 @foreach ($roles as $item)
-                                <option value="{{ $item['role_id'] }}">{{ $item['name'] }}</option>
+                                <option value="{{ $item['id'] }}">{{ $item['name'] }}</option>
                                 @endforeach
                             @endif
                         </select>

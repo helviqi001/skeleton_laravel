@@ -10,8 +10,6 @@ class User extends Model
 {
     use SoftDeletes;
 
-    protected $primaryKey = 'user_id';
-
     protected $fillable = [
         'name',
         'email',
@@ -61,6 +59,6 @@ class User extends Model
 
     public function role()
     {
-        return $this->hasOne(Role::class, 'role_id', 'role_id');
+        return $this->belongsTo(Role::class, 'role_id', 'id');
     }
 }

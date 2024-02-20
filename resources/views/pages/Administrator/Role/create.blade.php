@@ -40,35 +40,35 @@
                             <td>
                                 <div class="checkbox">
                                     <label>
-                                        <input type="checkbox" class="" name="menu[{{ $menuItem['menu_item_id'] }}][view]" value="1">
+                                        <input type="checkbox" class="" name="menu[{{ $menuItem['id'] }}][view]" value="1">
                                     </label>
                                 </div>
                             </td>
                             <td>
                                 <div class="checkbox">
                                     <label>
-                                        <input type="checkbox" class="" name="menu[{{ $menuItem['menu_item_id'] }}][add]" value="1">
+                                        <input type="checkbox" class="" name="menu[{{ $menuItem['id'] }}][add]" value="1">
                                     </label>
                                 </div>
                             </td>
                             <td>
                                 <div class="checkbox">
                                     <label>
-                                        <input type="checkbox" class="" name="menu[{{ $menuItem['menu_item_id'] }}][edit]" value="1">
+                                        <input type="checkbox" class="" name="menu[{{ $menuItem['id'] }}][edit]" value="1">
                                     </label>
                                 </div>
                             </td>
                             <td>
                                 <div class="checkbox">
                                     <label>
-                                        <input type="checkbox" class="" name="menu[{{ $menuItem['menu_item_id'] }}][delete]" value="1">
+                                        <input type="checkbox" class="" name="menu[{{ $menuItem['id'] }}][delete]" value="1">
                                     </label>
                                 </div>
                             </td>
                             <td>
                                 <div class="checkbox">
                                     <label>
-                                        <input type="checkbox" class="" name="menu[{{ $menuItem['menu_item_id'] }}][other]" value="1">
+                                        <input type="checkbox" class="" name="menu[{{ $menuItem['id'] }}][other]" value="1">
                                     </label>
                                 </div>
                             </td>

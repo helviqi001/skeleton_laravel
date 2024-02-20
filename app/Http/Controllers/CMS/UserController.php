@@ -22,7 +22,7 @@ class UserController extends Controller
 
     public function create()
     {
-        $roles = Role::where('role_id', '!=', 1)->get()->toArray();
+        $roles = Role::where('id', '!=', 1)->get()->toArray();
         return view('pages.Administrator.User.create', ['roles' => $roles]);
     }
 
@@ -62,8 +62,8 @@ class UserController extends Controller
 
     public function edit($id)
     {
-        $roles = Role::where('role_id', '!=', 1)->get()->toArray();
-        $user = User::where('user_id', $id)->first()->toArray();
+        $roles = Role::where('id', '!=', 1)->get()->toArray();
+        $user = User::where('id', $id)->first()->toArray();
         return view('pages.Administrator.User.edit', ['roles' => $roles, 'user' => $user]);
     }
 
@@ -95,7 +95,7 @@ class UserController extends Controller
             $param['password'] = Hash::make($request->input('password'));
         }
 
-        $update = User::where('user_id', $id)->update($param);
+        $update = User::where('id', $id)->update($param);
 
         if ($update) {
             return redirect('admin')->with('success', 'User Updated');
@@ -144,8 +144,8 @@ class UserController extends Controller
                 return '<img src="'. $data->avatar .'" class="img-circle" style="width:50px">';
             })
             ->addColumn('action', function ($data) {
-                $btn = '<a class="btn btn-default" href="admin/' . $data->user_id . '">Edit</a>';
-                $btn .= ' <button class="btn btn-danger btn-xs btnDelete" style="padding: 5px 6px;" onclick="fnDelete(this,' . $data->user_id . ')">Delete</button>';
+                $btn = '<a class="btn btn-default" href="admin/' . $data->id . '">Edit</a>';
+                $btn .= ' <button class="btn btn-danger btn-xs btnDelete" style="padding: 5px 6px;" onclick="fnDelete(this,' . $data->id . ')">Delete</button>';
                 return $btn;
             })
             ->rawColumns(['avatar', 'action'])

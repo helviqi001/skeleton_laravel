@@ -38,7 +38,7 @@ class MenuItemController extends Controller
                 foreach ($roles as $keyX => $role) {
                     // set param and default value to insert privilege
                     $privilege['role_id'] = $role->role_id;
-                    $privilege['menu_item_id'] = $create->menu_item_id;
+                    $privilege['menu_item_id'] = $create->id;
                     $privilege['view'] = 0;
                     $privilege['add'] = 0;
                     $privilege['edit'] = 0;
@@ -55,7 +55,7 @@ class MenuItemController extends Controller
 
     public function edit($id)
     {
-        $data = MenuItem::where('menu_item_id', $id)->first();
+        $data = MenuItem::where('id', $id)->first();
         $menuGroups = MenuGroup::get()->toArray();
 
         return view('pages.Configuration.MenuItem.edit', compact('data', 'menuGroups'));
@@ -66,7 +66,7 @@ class MenuItemController extends Controller
         $data = $request->except('_token');
 
         // insert new role
-        $update = MenuItem::where('menu_item_id', $id)->update($data);
+        $update = MenuItem::where('id', $id)->update($data);
         if ($update) {
             return redirect('menu-item')->with('success', 'Menu Item Updated');
         }
@@ -75,7 +75,7 @@ class MenuItemController extends Controller
 
     public function delete($id)
     {
-        MenuItem::where('menu_item_id', $id)->delete();
+        MenuItem::where('id', $id)->delete();
         return redirect('menu-item')->with('success', 'Menu Item Deleted');
     }
 
@@ -109,8 +109,8 @@ class MenuItemController extends Controller
             ->setTotalRecords($data->total)
             ->setFilteredRecords($data->total)
             ->addColumn('action', function ($data) {
-                $btn = '<a class="btn btn-default" href="menu-item/' . $data->menu_item_id . '">Edit</a>';
-                $btn .= ' <button class="btn btn-danger btn-xs btnDelete" style="padding: 5px 6px;" onclick="fnDelete(this,' . $data->menu_item_id . ')">Delete</button>';
+                $btn = '<a class="btn btn-default" href="menu-item/' . $data->id . '">Edit</a>';
+                $btn .= ' <button class="btn btn-danger btn-xs btnDelete" style="padding: 5px 6px;" onclick="fnDelete(this,' . $data->id . ')">Delete</button>';
                 return $btn;
             })
             ->rawColumns(['action'])

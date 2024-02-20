@@ -16,9 +16,8 @@ class Role extends Model
         'updated_by'
     ];
 
-    protected $primaryKey = 'role_id';
     public function privileges()
     {
-        return $this->hasMany(Privilege::class, 'role_id', 'role_id');
+        return $this->hasMany(Privilege::class, 'role_id', 'id');
     }
 }

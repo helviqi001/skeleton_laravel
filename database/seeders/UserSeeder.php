@@ -20,7 +20,7 @@ class UserSeeder extends Seeder
                 'email_verified_at' => now(),
                 'birth_date' => now()->format('Y-m-d'),
                 'password' => Hash::make('123123'),
-                'role_id' => Role::whereName('Superadmin')->first()->role_id,
+                'role_id' => Role::whereName('Superadmin')->first()->id,
                 'created_at' => now(),
                 'updated_at' => now()
             ],
@@ -32,7 +32,7 @@ class UserSeeder extends Seeder
                 'email_verified_at' => now(),
                 'birth_date' => now()->format('Y-m-d'),
                 'password' => Hash::make('123123'),
-                'role_id' => Role::whereName('Admin')->first()->role_id,
+                'role_id' => Role::whereName('Admin')->first()->id,
                 'created_at' => now(),
                 'updated_at' => now()
             ]

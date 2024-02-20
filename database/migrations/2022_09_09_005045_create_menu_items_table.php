@@ -8,7 +8,7 @@ return new class extends Migration {
     public function up()
     {
         Schema::create('menu_items', function (Blueprint $table) {
-            $table->id('menu_item_id');
+            $table->id();
             $table->string('name');
             $table->string('url');
             $table->unsignedBigInteger('menu_group_id')->index()->nullable();

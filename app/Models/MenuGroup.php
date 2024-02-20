@@ -17,10 +17,8 @@ class MenuGroup extends Model
         'status'
     ];
 
-    protected $primaryKey = 'menu_group_id';
-
     public function menu_item()
     {
-        return $this->hasMany(MenuItem::class, 'menu_group_id', 'menu_group_id');
+        return $this->hasMany(MenuItem::class, 'menu_group_id', 'id');
     }
 }

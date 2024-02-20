@@ -26,7 +26,7 @@ class LoginController extends Controller
         if ($user) {
             if (Hash::check($request->input('password'), $user->password)) {
                 // set user login data to session
-                $userData['user_id'] = $user->user_id;
+                $userData['id'] = $user->id;
                 $userData['name'] = $user->name;
                 $userData['email'] = $user->email;
                 $userData['avatar'] = $user->avatar;
@@ -48,7 +48,7 @@ class LoginController extends Controller
                     foreach ($menu['menu_item'] as $keyY => $menu_item) {
                         $viewable = false;
                         foreach ($permissions as $keyZ => $permission) {
-                            if ($permission['menu_item_id'] == $menu_item['menu_item_id']) {
+                            if ($permission['menu_item_id'] == $menu_item['id']) {
                                 $viewable = true;
                             }
                         }

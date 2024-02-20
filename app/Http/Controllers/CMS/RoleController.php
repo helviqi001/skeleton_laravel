@@ -37,7 +37,7 @@ class RoleController extends Controller
             $menuItems = MenuItem::get()->toArray();
             foreach ($menuItems as $keyX => $menuItem) {
                 // set param and default value to insert privilege
-                $privilege['role_id'] = $createRole->role_id;
+                $privilege['role_id'] = $createRole->id;
                 $privilege['menu_item_id'] = $menuItem['menu_item_id'];
                 $privilege['view'] = 0;
                 $privilege['add'] = 0;
@@ -46,7 +46,7 @@ class RoleController extends Controller
                 $privilege['other'] = 0;
                 if (array_key_exists('menu', $data)) {
                     foreach ($data['menu'] as $keyY => $menu) {
-                        if ($menuItem['menu_item_id'] == $keyY) {
+                        if ($menuItem['id'] == $keyY) {
                             if (array_key_exists('view', $menu)) {
                                 $privilege['view'] = 1;
                             }
@@ -76,7 +76,7 @@ class RoleController extends Controller
 
     public function edit($id)
     {
-        $data = Role::where('role_id', $id)->with('privileges')->first();
+        $data = Role::where('id', $id)->with('privileges')->first();
         $menuItems = MenuItem::with('menu_group')->get()->toArray();
 
         return view('pages.Administrator.Role.edit', compact('data', 'menuItems'));
@@ -87,7 +87,7 @@ class RoleController extends Controller
         $data = $request->all();
 
         // get role
-        $role = Role::where('role_id', $id)->with('privileges')->first();
+        $role = Role::where('id', $id)->with('privileges')->first();
         if ($role) {
             foreach ($role->privileges as $keyX => $rolePrivilege) {
                 // set param and default value to update privilege
@@ -118,7 +118,7 @@ class RoleController extends Controller
                     }
                 }
                 // update privilege
-                Privilege::where('privilege_id', $rolePrivilege->privilege_id)->update($privilege);
+                Privilege::where('id', $rolePrivilege->id)->update($privilege);
             }
         } else {
             return back()->with('error', 'Oops, something went wrong!');
@@ -129,7 +129,7 @@ class RoleController extends Controller
     public function delete($id)
     {
         Privilege::where('role_id', $id)->delete();
-        Role::where('role_id', $id)->delete();
+        Role::where('id', $id)->delete();
         return redirect('/role')->with('success', 'Role Deleted');
     }
 
@@ -141,7 +141,7 @@ class RoleController extends Controller
 
         $data  = new Role();
         if ($request->session()->get('user_data')['role_id'] != 1) {
-            $data = $data->where('role_id', '!=', 1);
+            $data = $data->where('id', '!=', 1);
         }
 
         if ($request->input('search')['value'] != null && $request->input('search')['value'] != '') {
@@ -165,8 +165,8 @@ class RoleController extends Controller
             ->setTotalRecords($data->total)
             ->setFilteredRecords($data->total)
             ->addColumn('action', function ($data) {
-                $btn = '<a class="btn btn-default" href="role/' . $data->role_id . '">Edit</a>';
-                $btn .= ' <button class="btn btn-danger btn-xs btnDelete" style="padding: 5px 6px;" onclick="fnDelete(this,' . $data->role_id . ')">Delete</button>';
+                $btn = '<a class="btn btn-default" href="role/' . $data->id . '">Edit</a>';
+                $btn .= ' <button class="btn btn-danger btn-xs btnDelete" style="padding: 5px 6px;" onclick="fnDelete(this,' . $data->id . ')">Delete</button>';
                 return $btn;
             })
             ->rawColumns(['action'])
