@@ -39,7 +39,7 @@ $auth = Session::get('user_data');
                     </a>
                     <ul class="dropdown-menu">
 
-                        <li class="disabled"><a href="#">Profile</a></li>
+                        <li><a href="#">Profile</a></li>
                         <li class="divider"></li>
                         <li>
                             <a href="{{ url('/logout') }}" id="logout" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Sign out</a>
